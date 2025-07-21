@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserDetailController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
 // prefix localhost:8000/admin/.....
 Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(function () {
     Route::resource('users', UserController::class);
+    Route::resource('user-details', UserDetailController::class);
 });
 
 require __DIR__ . '/auth.php';

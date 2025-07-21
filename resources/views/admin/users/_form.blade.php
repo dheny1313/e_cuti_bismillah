@@ -5,11 +5,6 @@
             class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" required>
     </div>
 
-    <div>
-        <label class="block text-sm font-medium text-gray-700">Nama Belakang</label>
-        <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}"
-            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-    </div>
 
     <div>
         <label class="block text-sm font-medium text-gray-700">Username</label>
