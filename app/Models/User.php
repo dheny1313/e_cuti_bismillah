@@ -29,12 +29,17 @@ class User extends Authenticatable
     ];
 
 
-    public function userLevel()
+    // public function userLevel()
+    // {
+    //     return $this->belongsTo(UserLevel::class);
+    // }
+
+    public function user_level()
     {
         return $this->belongsTo(UserLevel::class);
     }
 
-    public function userDetail()
+    public function user_Detail()
     {
         return $this->belongsTo(UserDetail::class);
     }
