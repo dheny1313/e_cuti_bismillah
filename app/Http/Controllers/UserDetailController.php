@@ -10,60 +10,63 @@ class UserDetailController extends Controller
 {
     public function index()
     {
-        $userDetails = UserDetail::with('jenisKelamin')->get();
-        return view('admin.user_details.index', compact('userDetails'));
+        $user_details = UserDetail::with(['user', 'jenis_kelamin'])->paginate(10);
+
+        return view('admin.user_details.index', compact('user_details'));
+
     }
 
-    public function create()
-    {
-        $jenisKelaminList = JenisKelamin::all();
-        return view('admin.user_details.create', compact('jenisKelaminList'));
-    }
+    // public function create()
+    // {
+    //     $jenisKelaminList = JenisKelamin::all();
+    //     $userDetail = new UserDetail();
+    //     return view('admin.user_details.create', compact('jenisKelaminList', 'userDetail'));
+    // }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'jenis_kelamin_id' => 'required|exists:jenis_kelamins,id',
-            'no_telp' => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:255',
-            'nip' => 'nullable|string|max:50',
-            'pangkat' => 'nullable|string|max:100',
-            'jabatan' => 'nullable|string|max:100',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'nama_lengkap' => 'required|string|max:255',
+    //         'jenis_kelamin_id' => 'required|exists:jenis_kelamins,id',
+    //         'no_telp' => 'nullable|string|max:20',
+    //         'alamat' => 'nullable|string|max:255',
+    //         'nip' => 'nullable|string|max:50',
+    //         'pangkat' => 'nullable|string|max:100',
+    //         'jabatan' => 'nullable|string|max:100',
+    //     ]);
 
-        UserDetail::create($request->all());
+    //     UserDetail::create($request->all());
 
-        return redirect()->route('user-details.index')->with('success', 'Data berhasil ditambahkan.');
-    }
+    //     return redirect()->route('user-details.index')->with('success', 'Data berhasil ditambahkan.');
+    // }
 
-    public function edit(UserDetail $userDetail)
-    {
-        $jenisKelaminList = JenisKelamin::all();
-        return view('admin.user_details.edit', compact('userDetail', 'jenisKelaminList'));
-    }
+    // public function edit(UserDetail $userDetail)
+    // {
+    //     $jenisKelaminList = JenisKelamin::all();
+    //     return view('admin.user_details.edit', compact('userDetail', 'jenisKelaminList'));
+    // }
 
-    public function update(Request $request, UserDetail $userDetail)
-    {
-        $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'jenis_kelamin_id' => 'required|exists:jenis_kelamins,id',
-            'no_telp' => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:255',
-            'nip' => 'nullable|string|max:50',
-            'pangkat' => 'nullable|string|max:100',
-            'jabatan' => 'nullable|string|max:100',
-        ]);
+    // public function update(Request $request, UserDetail $userDetail)
+    // {
+    //     $request->validate([
+    //         'nama_lengkap' => 'required|string|max:255',
+    //         'jenis_kelamin_id' => 'required|exists:jenis_kelamins,id',
+    //         'no_telp' => 'nullable|string|max:20',
+    //         'alamat' => 'nullable|string|max:255',
+    //         'nip' => 'nullable|string|max:50',
+    //         'pangkat' => 'nullable|string|max:100',
+    //         'jabatan' => 'nullable|string|max:100',
+    //     ]);
 
-        $userDetail->update($request->all());
+    //     $userDetail->update($request->all());
 
-        return redirect()->route('user-details.index')->with('success', 'Data berhasil diupdate.');
-    }
+    //     return redirect()->route('user-details.index')->with('success', 'Data berhasil diupdate.');
+    // }
 
 
-    public function destroy(UserDetail $userDetail)
-    {
-        $userDetail->delete();
-        return redirect()->route('user-details.index')->with('success', 'Data berhasil dihapus.');
-    }
+    // public function destroy(UserDetail $userDetail)
+    // {
+    //     $userDetail->delete();
+    //     return redirect()->route('user-details.index')->with('success', 'Data berhasil dihapus.');
+    // }
 }

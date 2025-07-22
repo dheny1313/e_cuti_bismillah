@@ -10,6 +10,7 @@ class UserDetail extends Model
     use HasFactory;
     protected $fillable = [
         'nama_lengkap',
+        'user_id',
         'jenis_kelamin_id',
         'no_telp',
         'alamat',
@@ -18,8 +19,13 @@ class UserDetail extends Model
         'jabatan'
     ];
 
-    public function jenisKelamin()
+    
+    public function jenis_kelamin()
     {
-        return $this->belongsTo(JenisKelamin::class);
+        return $this->belongsTo(JenisKelamin::class, 'jenis_kelamin_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

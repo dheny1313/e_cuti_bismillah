@@ -28,10 +28,12 @@
                         <th class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
                         <th class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Email</th>
                         <th class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Level</th>
+                        <th class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">nama lengkap</th>
                         <th class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                   {{-- <pre>{{ dd($users) }}</pre> --}}
                     @foreach ($users as $user)
                         <tr>
                             <td class="px-4 py-2">{{ $loop->iteration }}</td>
@@ -39,6 +41,7 @@
                             <td class="px-4 py-2">{{ $user->username }}</td>
                             <td class="px-4 py-2">{{ $user->email }}</td>
                             <td class="px-4 py-2">{{ $user->user_level->user_level ?? '-' }}</td>
+                            <td class="px-4 py-2">{{ $user->user_detail->nama_lengkap ?? '-' }}</td>
                             <td class="flex px-4 py-2 space-x-2">
                                 <a href="{{ route('users.edit', $user->id) }}"
                                    class="text-blue-600 hover:underline">Edit</a>

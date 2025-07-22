@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuti extends Model
 {
-    protected $table = 'cuti';
+    protected $table = 'cutis';
     protected $primaryKey = 'id_cuti';
-    public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [

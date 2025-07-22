@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserLevel;
 use App\Models\UserDetail;
 use Illuminate\Support\Facades\Hash;
+use App\Models\JenisKelamin;
 
 class UserController extends Controller
 {
@@ -18,60 +19,92 @@ class UserController extends Controller
 
     public function create()
     {
-        $user_levels = UserLevel::all();
-        return view('admin.users.create', compact('user_levels'));
+        return view('admin.users.create', [
+            'user' => new User(),
+            'userdetail' => new UserDetail(),
+            'levels' => UserLevel::all(),
+            'jenis_kelamin' => JenisKelamin::all(),
+        ]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:255|unique:users',
+        $validatedUser = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:100|unique:users',
             'email' => 'nullable|email|unique:users',
-            'password' => 'nullable|string|',
+            'password' => 'required|string|min:6',
             'user_level_id' => 'nullable|exists:user_levels,id',
         ]);
 
-        $detail = UserDetail::create([]);
+        $validatedDetail = $request->validate([
+            'nama_lengkap' => 'nullable|string|max:255',
+            'jenis_kelamin_id' => 'nullable|integer',
+            'no_telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'nip' => 'nullable|string|max:50',
+            'pangkat' => 'nullable|string|max:50',
+            'jabatan' => 'nullable|string|max:100',
+        ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        $validated['user_detail_id'] = $detail->id;
+        $user = new User($validatedUser);
+        $user->password = Hash::make($validatedUser['password']);
+        $user->save();
 
-        User::create($validated);
+        $userDetail = new UserDetail($validatedDetail);
+        $userDetail->user_id = $user->id;
+        $userDetail->save();
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
+        return redirect()->route('users.index')->with('success', 'Data user berhasil ditambahkan.');
     }
 
     public function edit(User $user)
     {
-        $user_levels = UserLevel::all();
-        return view('admin.users.edit', compact('user', 'user_levels'));
+        return view('admin.users.edit', [
+            'user' => $user,
+            'userdetail' => $user->user_detail ?? new UserDetail(),
+            'levels' => UserLevel::all(),
+            'jenis_kelamin' => JenisKelamin::all(),
+        ]);
     }
 
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
+        $validatedUser = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:100|unique:users,username,' . $user->id,
             'email' => 'nullable|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|',
+            'password' => 'nullable|string|min:6',
             'user_level_id' => 'nullable|exists:user_levels,id',
         ]);
 
-        if ($validated['password']) {
-            $validated['password'] = Hash::make($validated['password']);
+        $validatedDetail = $request->validate([
+            'nama_lengkap' => 'nullable|string|max:255',
+            'jenis_kelamin_id' => 'nullable|integer',
+            'no_telp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'nip' => 'nullable|string|max:50',
+            'pangkat' => 'nullable|string|max:50',
+            'jabatan' => 'nullable|string|max:100',
+        ]);
+
+        if ($validatedUser['password']) {
+            $validatedUser['password'] = Hash::make($validatedUser['password']);
         } else {
-            unset($validated['password']);
+            unset($validatedUser['password']);
         }
 
-        $user->update($validated);
+        $user->update($validatedUser);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diupdate');
+        $userDetail = $user->user_detail ?: new UserDetail(['user_id' => $user->id]);
+        $userDetail->fill($validatedDetail)->save();
+
+        return redirect()->route('users.index')->with('success', 'Data user berhasil diperbarui.');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
 }
